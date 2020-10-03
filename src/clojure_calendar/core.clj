@@ -14,7 +14,7 @@
 
 (def now (local-date))
 
-(plus now (days 1))
+(str (java.time.LocalDate/now))
 
 
 
@@ -27,10 +27,6 @@
     (if (= count 28)
       allDays
       (recur (plus day (days 1) (inc count) (conj allDays day))))))
-
-
-
-
 
 (defn test
   []
