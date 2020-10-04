@@ -9,32 +9,21 @@
   [& args]
   (println "Hello, World!"))
 
-(local-date 1999 04 2)
 
-
-(def now (local-date))
-
-(str (java.time.LocalDate/now))
+(def twentyfour-hours (list 0 1 2 3 4 5 6 7 8 9 10 11 12
+                            13 14 15 16 17 18 19 20 21 22 23))
 
 
 
-
-(defn idk
-  []
-  (loop [day (local-date)
-         count 0
-         allDays []]
-    (if (= count 28)
-      allDays
-      (recur (plus day (days 1) (inc count) (conj allDays day))))))
-
-(defn test
+(defn getNext4WeeksDates
   []
   (loop [count 0
          day (local-date)
          other []]
     (if (= 28 count)
       other
-      (recur (inc count) (plus day (days 1)) (conj other day)))))
+      (recur (inc count) (plus day (days 1)) (conj other (str day))))))
 
-(test)
+
+
+(map #(hash-map % twentyfour-hours) (getNext4WeeksDates))
