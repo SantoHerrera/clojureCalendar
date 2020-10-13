@@ -15,6 +15,7 @@
 ; (def twentyfour-hours (list 0))
 
 
+(def allEventDates (atom []))
 
 (defn getNext4WeeksDates
   []
@@ -53,7 +54,8 @@
 
 
 
-
+;change any number to true
+;
 
 
 
