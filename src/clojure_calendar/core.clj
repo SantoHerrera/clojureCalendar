@@ -7,15 +7,22 @@
 (defn -main
   "I don't do a whole lot ... yet."
   [& args]
-  (println "Hello, World!")
+  (println "Hello, World!"))
+
+(defn getInput
+  []
+  (loop [input "nothing"
+         allInputs []]
+   (if (= "e" input)
+     (println "exits program" allInputs)
+     (recur (read-line) (conj allInputs input)))))
 
 
- (def twentyfour-hours (list 12 3 6 9)))
 
-; (def twentyfour-hours (list 0))
+(println (count nextMonth))
 
 
-(def allEventDates (atom []))
+
 
 (defn getNext4WeeksDates
   []
@@ -27,19 +34,133 @@
       (recur (inc count) (plus day (days 1)) (conj other (str day))))))
 
 
-(defn assignHoursToDates
-  [dates]
-  (map #(hash-map % twentyfour-hours) dates))
+(recurFunction)
 
-(assignHoursToDates (getNext4WeeksDates))
 
-(def calendarV2 (assignHoursToDates (getNext4WeeksDates)))
+(def nextMonth
+ (into {} (map (fn [x] (hash-map x (hash-map "booked?" (randomBoolean) "nameOfEvent" "nothingBookedYet"))) (getNext4WeeksDates))))
 
-(def calendarV3 (partition 7 calendarV2))
+(println nextMonth)
 
-(println calendarV3)
+(defn test
+  []
+  (loop [i 0]
+   (when (< i 5)
+     (println i)
+     (recur (inc i))))); loop i will take this value
 
-(print-board calendarV3)
+
+(test)
+
+
+
+
+(rand-int 2)
+
+
+(defn randomBoolean
+  []
+  (if (= 0 (rand-int 2))
+   true
+   false))
+
+
+(randomBoolean)
+
+
+
+
+(defn vectorXLong
+  [x]
+  (loop [count 0
+         all []]
+   (if (= count x)
+    all
+    (recur (+ count 1) (conj all count)))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+    ;
+    ; (def twentyfour-hours (map #(merge (hash-map % false name "nothing")) (vectorXLong 4)))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(def eventsNotWithinTimeline (atom []))
 
 
 
@@ -47,8 +168,6 @@
   [board]
   (doseq [a board]
    (println a)))
-
-(partition 7 calendarV2)
 
 
 
@@ -67,29 +186,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 (defn main
   []
   (loop [calendar (assignHoursToDates (getNext4WeeksDates))
@@ -97,26 +193,3 @@
     (if (= "e" input)
       (print-board calendar)
       (recur calendar (read-line)))))
-
-
-
-
-
-
-
-
-
-
-(partition 3 (assignHoursToDates (getNext4WeeksDates)))
-
-
-(map #(hash-map % twentyfour-hours) (getNext4WeeksDates))
-
-
-; TODO
-; INSTEAD OF LIST OF 0 - 23
-; make it hashmap of 0 - 23 being keys, and all being false
-;
-;
-;
-;
