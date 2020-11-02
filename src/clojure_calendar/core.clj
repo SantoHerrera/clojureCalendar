@@ -34,29 +34,28 @@
       (recur (inc count) (plus day (days 1)) (conj other (str day))))))
 
 
-(recurFunction)
+(println (getNext4WeeksDates))
 
 
 (def nextMonth
  (into {} (map (fn [x] (hash-map x (hash-map "booked?" (randomBoolean) "nameOfEvent" "nothingBookedYet"))) (getNext4WeeksDates))))
 
-(println nextMonth)
-
-(defn test
-  []
-  (loop [i 0]
-   (when (< i 5)
-     (println i)
-     (recur (inc i))))); loop i will take this value
 
 
-(test)
+(def booked-events
+ (filter (fn [[dt {:strs [booked?]}]]
+           booked?)
+         nextMonth))
 
+(defn createDataBase
+  [dates]
+  (->> dates
+   (map (fn [x]
+         {x {:booked? (randomBoolean)
+             :nameOfEvent :nothingBookedYet}}))
+   (into {})))
 
-
-
-(rand-int 2)
-
+(createDataBase (getNext4WeeksDates))
 
 (defn randomBoolean
   []
@@ -64,19 +63,6 @@
    true
    false))
 
-
-(randomBoolean)
-
-
-
-
-(defn vectorXLong
-  [x]
-  (loop [count 0
-         all []]
-   (if (= count x)
-    all
-    (recur (+ count 1) (conj all count)))))
 
 
 
