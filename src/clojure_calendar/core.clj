@@ -9,20 +9,28 @@
   [& args]
   (println "Hello, World!"))
 
-(defn getInput
-  []
-  (loop [input "nothing"
-         allInputs []]
-   (if (= "e" input)
-     (println "exits program" allInputs)
-     (recur (read-line) (conj allInputs input)))))
+; make this a cond instead of (if
+;ex.
+;(cond (= input "e") (exitProgram)
+;      :else do (updateCalendar) (recur))
+;               (recur)
+;
+;
+
+;put do on (= input "e")
+;and println filtered aswell
+;
+;
+;
+;;
+;
 
 
 
-(println (count nextMonth))
-
-
-
+;(def booked-events
+ ; (filter (fn [[dt {:strs [booked?]}]]
+ ;           booked?)
+ ;         nextMonth))
 
 (defn getNext4WeeksDates
   []
@@ -33,19 +41,11 @@
       other
       (recur (inc count) (plus day (days 1)) (conj other (str day))))))
 
-
-(println (getNext4WeeksDates))
-
-
-(def nextMonth
- (into {} (map (fn [x] (hash-map x (hash-map "booked?" (randomBoolean) "nameOfEvent" "nothingBookedYet"))) (getNext4WeeksDates))))
-
-
-
-(def booked-events
- (filter (fn [[dt {:strs [booked?]}]]
-           booked?)
-         nextMonth))
+(defn randomBoolean
+  []
+  (if (= 0 (rand-int 2))
+   true
+   false))
 
 (defn createDataBase
   [dates]
@@ -55,25 +55,60 @@
              :nameOfEvent :nothingBookedYet}}))
    (into {})))
 
-(createDataBase (getNext4WeeksDates))
+(def nextMonthV2 (createDataBase (getNext4WeeksDates)))
 
-(defn randomBoolean
+
+(defn nextMonthV3 [] (createDataBase (getNext4WeeksDates)))
+
+(println (createDataBase (getNext4WeeksDates)))
+
+;
+;todo add onEnter function
+;
+;
+;
+;
+;
+
+
+(defn getInputV3
   []
-  (if (= 0 (rand-int 2))
-   true
-   false))
+  (loop [input "nothing"
+         allInputs []]
+    (cond
+      (= input "e") (println "exitsg program")
+      :else (do
+              (filter (fn [[dt {:strs [booked?]}]]
+                          booked?)
+                      nextMonthV2)
+              (recur (read-line) (conj allInputs input))))))
+
+
+
+(defn getInputV4
+  []
+  (loop [input "nothing"
+         allInputs []]
+    (cond
+      (= input "e")
+      (do
+        (mapcat println booked-events)
+        (println "exits program"))
+      :else (recur (read-line) (conj allInputs input)))))
 
 
 
 
 
 
+(def booked-events
+ (filter (fn [[dt f
+               dt {:strs [booked?]}]]
+           (println dt))
+         nextMonthV2))
 
 
-
-
-
-
+(println booked-events)
 
 
     ;
@@ -85,65 +120,89 @@
 
 
 
+(def booked-eventsV2
+  (filter (fn [[dt {:strs [booked?]}]]
+            booked? (println booked?))
+          nextMonthV2))
+
+(println booked-eventsV2)
+
+(let [dt {:keys [booked?]} nextMonthV2]
+  (println dt))
+
+(def bookedV2
+  (filter (fn [[dt {:strs [booked?]}]]
+           (println "fasdf" booked?))
+    nextMonthV2))
+
+(println bookedV2)
+
+(println nextMonthV2)
+
+
+
+
+(filter (fn [[dt {:strs [booked?]} ]] booked?) nextMonthV2)
+
+
+
+
+
+(into {} (filter (fn [[dt {:strs [booked?]} ]] dt) nextMonthV2))
+
+
+
+
+(filter (fn [x] (let [obj x secondLayer obj] (println "whats this layer" (obj :booked?)))) nextMonthV2)
+
+
+
+(filter (fn [x] (let [obj x] (println "whats this layer" ((into {} obj) :booked?)))) nextMonthV2)
+
+
+
+(let [firstLayer nextMonthV2
+      secondLayer (:booked? firstLayer)]
+  (println "idk"  secondLayer))
+
+
+
+
+(filter (fn [x] (let [firstLayer {:strs [booked?]}]
+                 (println secondLayer "idk")))
+   nextMonthV2)
 
 
 
 
 
 
+(let [{{booked :booked?} :keys} nextMonthV2]
+ (println "whats happening " booked))
 
 
+(filter (fn [x] (let [{booked :booked?} x] (println booked "fuck") nextMonthV2)))
+;this one works, kinda
+(map
+  (fn
+    [dt]
+    (let [[a b] dt] (println "fuck " b)))
+ nextMonthV2)
+
+(fn [[dt {:strs [booked]}]]
+    sd)
+; ;
+;   (filter (fn [[dt {:strs [booked?]}]]
+;             booked? (println booked?))
+;           nextMonthV2)
+
+(nextMonthV3)
+
+(nextMonthV3 {:keys "true"?})
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+(let [{allKeys :keys booked} nextMonthV2]
+  (println "idk" allKeys booked?))
 
 
 (def eventsNotWithinTimeline (atom []))
