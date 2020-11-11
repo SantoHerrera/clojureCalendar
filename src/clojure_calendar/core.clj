@@ -1,8 +1,14 @@
 (ns clojure-calendar.core
   (:gen-class))
 
+
+(ns my
+  (:require [cheshire.core :refer :all]))
+
+
 (refer-clojure :exclude [range iterate format max min])
 (use 'java-time)
+
 
 (defn -main
   "I don't do a whole lot ... yet."
@@ -38,18 +44,26 @@
              :nameOfEvent :nothingBookedYet}}))
    (into {})))
 
-(def nextMonth4 (createDataBase (getNext4WeeksDates)))
+(def nextMonth5 (createDataBase (getNext4WeeksDates)))
 
 
 (defn nextMonthV3 [] (createDataBase (getNext4WeeksDates)))
 
 ;
-;todo add onEnter function
+;todo add
+;instead of random boolean, make all default to false
+;update with utser input
 ;
-;
-;
-;
-;
+
+
+(defn bookedEvents
+  [calendar]
+  (into {}
+   (filter
+     (fn [x]
+       (get-in x [1 :booked?])) calendar)))
+
+(generate-string (bookedEvents nextMonth5))
 
 (defn getInput
   []
@@ -63,10 +77,38 @@
       :else (recur (read-line) (conj allInputs input)))))
 
 
-(mapcat println nextMonth4)
+
+;what todo
+;make a macro given nextMonth4
+;filters all trues and rreturns
+;
+;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 (apply println (into {} (filter (fn [x] (get-in x [1 :booked?])) nextMonth4)))
 
+(println nextMonth4)
+
+(update-in nextMonth4 ["2020-12-01"] assoc :booked? true)
+
+(println nextMonth4)
 
 ;this works
 ;why doesnt it return things already in order, wouldnt it do it firsst comee first serve??
@@ -94,3 +136,26 @@
     (if (= "e" input)
       (print-board calendar)
       (recur calendar (read-line)))))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+(def fuck {:foo "bar" :baz 5})
+
+
+(generate-string fuck)
