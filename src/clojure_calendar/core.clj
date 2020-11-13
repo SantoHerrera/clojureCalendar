@@ -1,9 +1,7 @@
 (ns clojure-calendar.core
-  (:gen-class))
-
-
-(ns my
+  (:gen-class)
   (:require [cheshire.core :refer :all]))
+
 
 
 (refer-clojure :exclude [range iterate format max min])
@@ -40,7 +38,7 @@
   [dates]
   (->> dates
    (map (fn [x]
-         {x {:booked? (randomBoolean)
+         {x {:booked? false
              :nameOfEvent :nothingBookedYet}}))
    (into {})))
 
@@ -65,22 +63,36 @@
 
 (generate-string (bookedEvents nextMonth5))
 
+(defn updateCalendar
+  [calendar date nameOfEvent]
+  (update-in calendar [date] assoc :booked? true :nameOfEvent nameOfEvent))
+
+(updateCalendar nextMonth5 "2020-12-01" "fuck it acutally worked")
+
+(println nextMonth5 "2020-12-01")
+
 (defn getInput
   []
-  (loop [input "nothing"
-         allInputs []]
+  (loop [calendar (createDataBase (getNext4WeeksDates))
+         dateToChange ""
+         nameOfEvent ""]
     (cond
-      (= input "e")
+      (or (= dateToChange "e") (= nameOfEvent "e"))
       (doall
-        (apply println (into {} (filter (fn [x] (get-in x [1 :booked?])) nextMonth4)))
+        (println "enter date to be changed followed by the name of the event")
+        (println (generate-string (bookedEvents calendar)))
         (println "exits  new"))
-      :else (recur (read-line) (conj allInputs input)))))
+      :else (recur (updateCalendar calendar dateToChange nameOfEvent) (read-line) (read-line)))))
+
+
 
 
 
 ;what todo
-;make a macro given nextMonth4
-;filters all trues and rreturns
+;
+;
+;
+;
 ;
 ;
 
