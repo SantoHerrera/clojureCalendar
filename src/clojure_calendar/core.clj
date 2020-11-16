@@ -67,9 +67,19 @@
   [calendar date nameOfEvent]
   (update-in calendar [date] assoc :booked? true :nameOfEvent nameOfEvent))
 
-(updateCalendar nextMonth5 "2020-12-01" "fuck it acutally worked")
 
-(println nextMonth5 "2020-12-01")
+(defn updateCalendarV2
+  [calendar date nameOfEvent]
+  (if (= nil (get-in calendar [date]))
+   calendar
+   (update-in calendar [date] assoc :booked? true :nameOfEvent nameOfEvent)))
+;make updateCalendar
+;
+;
+;
+;
+;
+;
 
 (defn getInput
   []
@@ -78,7 +88,7 @@
          nameOfEvent ""]
     (cond
       (or (= dateToChange "e") (= nameOfEvent "e"))
-      (doall
+      (doAll
         (println "enter date to be changed followed by the name of the event")
         (println (generate-string (bookedEvents calendar)))
         (println "exits  new"))
@@ -86,46 +96,80 @@
 
 
 
+(defn getInputV2
+  []
+  (loop [calendar (createDataBase (getNext4WeeksDates))
+         dateToChange ""
+         nameOfEvent ""]
+     (if (or (= dateToChange "e") (= nameOfEvent "e"))
+      (println (generate-string (bookedEvents calendar)))
+      (cond-> nextMonth5
+        (get-in calendar [dateToChange]) (updateCalendar calendar dateToChange nameOfEvent)))
+    (recur calendar (read-line) (read-line))))
 
 
-;what todo
+(defn getInputV3
+  []
+  (loop [calendar (createDataBase (getNext4WeeksDates))
+         dateToChange ""
+         nameOfEvent ""]
+    (if (or (= dateToChange "e") (= nameOfEvent "e"))
+     (println (generate-string (bookedEvents calendar) {:pretty true}))
+     (recur (updateCalendarV2 calendar dateToChange nameOfEvent) (read-line) (read-line)))))
+
+(println (createDataBase (getNext4WeeksDates)))
+
+
+
+(defn testV2
+  [input]
+  (if (= true input) "returns json of bookedEvents"
+   (cond-> nextMonth5
+     (get-in nextMonth5 [input]) (updateCalendar nextMonth5 input "yee"))))
+
+(get-in nextMonth5 ["2020-12-01"])
+
+
+  ; if input does not exit in hashmap (println "please do not ")
+  ;
+  ;
+  ;
+
+(cond-> 2
+  nil inc
+  true inc)
+
+
+(cond nextMonth5 "yes" false "false")
+
+
+;what toDo
+;1. move recur outside cond
+;
+;2.add another cond where if dateToChange is not in calendar dont updateCalendar
+;
+;3.
 ;
 ;
 ;
 ;
-;
-;
+
+
+(defn has-value
+  [key value]
+  (fn [m]
+    (= m (m key))))
+
+;"2002-12-01"
+(println nextMonth5)
+
+(contains? nextMonth5 :2020-12-01)
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-(apply println (into {} (filter (fn [x] (get-in x [1 :booked?])) nextMonth4)))
-
-(println nextMonth4)
-
-(update-in nextMonth4 ["2020-12-01"] assoc :booked? true)
-
-(println nextMonth4)
 
 ;this works
 ;why doesnt it return things already in order, wouldnt it do it firsst comee first serve??
-
-(map println (into {} (filter (fn [x] (get-in x [1 :booked?])) nextMonth4)))
 
 
 (defn print-board
