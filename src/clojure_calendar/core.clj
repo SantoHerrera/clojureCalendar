@@ -1,10 +1,14 @@
 (ns clojure-calendar.core
   (:gen-class)
-  (:require [cheshire.core :refer :all]))
+  (:refer-clojure :exclude [range iterate format max min])
+  (:require [cheshire.core :refer :all]
+            [java-time :refer :all]))
 
 
-(refer-clojure :exclude [range iterate format max min])
-(use 'java-time)
+; (ns clojure-calendar.clojure
+;   (:gen-class)
+;   (:require [cheshire.core :refer :all]
+;             [java-time :as jt]))
 
 
 (defn bookedEvents
@@ -27,7 +31,7 @@
   (loop [count 0
          day (local-date)
          other []]
-    (if (= 28 count)
+    (if (= 365 count)
       other
       (recur (inc count) (plus day (days 1)) (conj other (str day))))))
 
@@ -46,6 +50,7 @@
   (loop [calendar (create-data (getNext4WeeksDates))
          dateToChange ""
          nameOfEvent ""]
+    (println "Enter date, followed by the name of Event")
     (if (or (= dateToChange "e") (= nameOfEvent "e"))
      (println (generate-string (bookedEvents calendar) {:pretty true}))
      (recur (updateCalendar calendar dateToChange nameOfEvent) (read-line) (read-line)))))
@@ -55,3 +60,7 @@
    "I don't do a whole lot ... yet."
    [& args]
    (getInput))
+
+;format is yyyy-mm-dd
+;ex. 2021-04-28
+;
