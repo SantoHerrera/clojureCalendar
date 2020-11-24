@@ -2,65 +2,49 @@
   (:gen-class)
   (:refer-clojure :exclude [range iterate format max min])
   (:require [cheshire.core :refer :all]
-            [java-time :refer :all]))
+            [java-time :refer [local-date plus days]]))
 
-
-; (ns clojure-calendar.clojure
-;   (:gen-class)
-;   (:require [cheshire.core :refer :all]
-;             [java-time :as jt]))
-
-
-(defn bookedEvents
+(defn booked-events
   [calendar]
   (into (sorted-map)
    (filter
      (fn [x]
        (get-in x [1 :booked?])) calendar)))
 
-
-(defn updateCalendar
-  [calendar date nameOfEvent]
+(defn update-calendar
+  [calendar date name-of-event]
   (if (= nil (get-in calendar [date]))
    calendar
-   (update-in calendar [date] assoc :booked? true :nameOfEvent nameOfEvent)))
+   (update-in calendar [date] assoc :booked? true :name-of-event name-of-event)))
 
-
-(defn getNext4WeeksDates
-  []
+(defn get-next-x-dates
+  [x]
   (loop [count 0
          day (local-date)
          other []]
-    (if (= 365 count)
+    (if (= x count)
       other
       (recur (inc count) (plus day (days 1)) (conj other (str day))))))
-
 
 (defn create-data
    [dates]
    (->> dates
      (map (fn [x]
              {x {:booked? false
-                 :nameOfEvent :nothingBookedYet}}))
+                 :name-of-event :nothing-booked-yet}}))
      (into (sorted-map))))
 
-
-(defn getInput
+(defn get-input
   []
-  (loop [calendar (create-data (getNext4WeeksDates))
-         dateToChange ""
-         nameOfEvent ""]
-    (println "Enter date, followed by the name of Event")
-    (if (or (= dateToChange "e") (= nameOfEvent "e"))
-     (println (generate-string (bookedEvents calendar) {:pretty true}))
-     (recur (updateCalendar calendar dateToChange nameOfEvent) (read-line) (read-line)))))
-
+  (loop [calendar (create-data (get-next-x-dates 365))
+         date-to-change ""
+         name-of-event ""]
+    (println "Enter date, format yyyy-mm-dd, followed by the name of Event")
+    (if (or (= date-to-change "e") (= name-of-event "e"))
+     (println (generate-string (booked-events calendar) {:pretty true}))
+     (recur (update-calendar calendar date-to-change name-of-event) (read-line) (read-line)))))
 
 (defn -main
    "I don't do a whole lot ... yet."
    [& args]
-   (getInput))
-
-;format is yyyy-mm-dd
-;ex. 2021-04-28
-;
+   (get-input))
